@@ -109,7 +109,7 @@ private fun ControlScreen(
             Text("Field: ${"%.1f".format(sample?.magnitude ?: 0f)} µT")
             Text("Baseline: ${"%.1f".format(baseline ?: 0f)} µT")
             Text("Change: ${"%.1f".format(delta)} µT / threshold ${"%.1f".format(detector.thresholdDelta)} µT")
-            Text("Hall sensor candidates: ${sensors.hallCandidates.size}")
+
         }
 
         Section("Monitoring") {

@@ -13,7 +13,6 @@ data class SensorInfo(
     val version: Int, val range: Float, val resolution: Float, val power: Float, val minDelayUs: Int
 )
 
-enum class HallProbeStatus { NOT_FOUND, REGISTRATION_SUCCEEDED, PERMISSION_DENIED, REGISTRATION_FAILED }
 
 class SensorRepository(context: Context) : SensorEventListener {
     private val manager = context.getSystemService(SensorManager::class.java)
@@ -23,32 +22,6 @@ class SensorRepository(context: Context) : SensorEventListener {
         SensorInfo(it.name, it.vendor, it.type, it.stringType, it.version, it.maximumRange, it.resolution, it.power, it.minDelay)
     }
     val magnetometer: Sensor? = manager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
-    val hallCandidates: List<SensorInfo> = inventory.filter {
-        "${it.name} ${it.vendor} ${it.stringType}".contains(
-            Regex("hall|magnetic|cover|flip|scontext", RegexOption.IGNORE_CASE)
-        )
-    }
-    val hallProbeStatus: HallProbeStatus = probeHallSensors()
-
-    private fun probeHallSensors(): HallProbeStatus {
-        val candidates = manager.getSensorList(Sensor.TYPE_ALL).filter {
-            "${it.name} ${it.vendor} ${it.stringType}".contains(
-                Regex("hall|cover|flip|scontext", RegexOption.IGNORE_CASE)
-            )
-        }
-        if (candidates.isEmpty()) return HallProbeStatus.NOT_FOUND
-        return try {
-            val registered = candidates.any { manager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL) }
-            manager.unregisterListener(this)
-            if (registered) HallProbeStatus.REGISTRATION_SUCCEEDED else HallProbeStatus.REGISTRATION_FAILED
-        } catch (_: SecurityException) {
-            manager.unregisterListener(this)
-            HallProbeStatus.PERMISSION_DENIED
-        } catch (_: RuntimeException) {
-            manager.unregisterListener(this)
-            HallProbeStatus.REGISTRATION_FAILED
-        }
-    }
 
     fun start(): Boolean = magnetometer?.let { manager.registerListener(this, it, SensorManager.SENSOR_DELAY_GAME) } ?: false
     fun stop() = manager.unregisterListener(this)

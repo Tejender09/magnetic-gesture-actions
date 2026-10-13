@@ -1,25 +1,20 @@
-# Magnetic Secret Actions
+﻿# Magnetic Secret Actions
 
-An offline Android application for experimenting with magnetic gestures on phones
-that expose a public magnetometer. The primary target is Samsung Galaxy A35 5G
-(SM-A356E), but the application does not assume that Samsung's private Hall
-sensor is available to third-party applications.
+An offline Android application for triggering phone actions with a magnetic
+finger-ring using the phone's built-in magnetometer (TYPE_MAGNETIC_FIELD).
+The primary target is Samsung Galaxy A35 5G (SM-A356E), but the app works
+on any Android phone that exposes a public magnetometer.
 
 ## Current implementation
 
 - Kotlin, Jetpack Compose Material 3, MVVM-compatible sensor/domain separation.
-- Public `SensorManager` inventory and magnetometer live readings.
-- Hall-like sensor candidate discovery by public metadata only.
+- Public `SensorManager` magnetometer via `TYPE_MAGNETIC_FIELD`.
 - Baseline, adaptive tracking, hysteresis-style approach/presence/removal state,
   cooldown, and synthetic-testable detector.
 - Deterministic single/double/triple tap segmentation API.
 - User-started foreground service with a persistent monitoring notification.
 - Unit tests for magnitude and magnetic approach/removal.
 
-Hardware-dependent Hall listener access is intentionally not claimed. A sensor
-whose name contains “Hall” can still reject registration or emit no events.
-The current UI reports that limitation and uses `TYPE_MAGNETIC_FIELD` as the
-fallback.
 
 ## Build
 
@@ -51,18 +46,9 @@ geometry vary. Do not rely on this application for safety-critical actions.
 ## Connected-device verification
 
 On 2026-10-09, a USB-debugging Samsung SM-A356E (Android 16) was connected.
-The device exposed 35 sensors, including:
-
-- `AK09918C Magnetometer` from Asahi Kasei Microdevices, with live readings
-  successfully received by this app.
-- `Samsung Hall IC` from Samsung Inc., string type
-  `com.samsung.sensor.hallIC` (vendor type 65600), listed with
-  `com.samsung.permission.SSENSOR`.
-
-The app's public listener probe reported `REGISTRATION_FAILED` for the Hall
-candidate, while magnetometer registration succeeded. This verifies the
-fallback path on this connected device, not successful Hall access. A physical
-magnet gesture and detection accuracy were not measured yet.
+The device exposed 35 sensors, including `AK09918C Magnetometer` from Asahi
+Kasei Microdevices. Live magnetometer readings were successfully received by
+this app. The magnetometer is the sole sensor used for gesture detection.
 
 ## Magnetic finger-ring mode
 
