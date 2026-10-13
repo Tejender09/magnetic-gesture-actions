@@ -100,8 +100,8 @@ private fun ControlScreen(
         Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Text("Magnetic Secret Actions", style = MaterialTheme.typography.headlineSmall)
-        Text("Magnetic finger-ring controller", style = MaterialTheme.typography.bodyMedium)
+        Text("Magnetic Gesture Actions", style = MaterialTheme.typography.headlineSmall)
+        Text("Magnet gesture controller", style = MaterialTheme.typography.bodyMedium)
 
         Section("Live sensor") {
             Text("Sensor: ${sensors.magnetometer?.name ?: "Magnetometer unavailable"}")
@@ -129,7 +129,7 @@ private fun ControlScreen(
         }
 
         Section("Calibration") {
-            Text("Keep the ring away from the phone before calibrating.")
+            Text("Keep the magnet away from the phone before calibrating.")
             Button(
                 onClick = {
                     if (samples.isNotEmpty()) {
