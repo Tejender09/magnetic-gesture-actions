@@ -32,3 +32,4 @@ class SensorRepository(context: Context) : SensorEventListener {
     }
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) = Unit
 }
+
